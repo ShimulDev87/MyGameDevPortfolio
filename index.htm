@@ -83,7 +83,12 @@
 <style>
     body {
       background-image: url('bg.jpg');
-      background-color: #242323;
+      background-size: cover; /* Ensures the background image covers the entire viewport */
+            background-position: center; /* Centers the background image */
+            background-repeat: no-repeat; /* Prevents the background image from repeating */
+            background-color: #242323; /* Fallback background color */
+            margin: 0; /* Removes default margin */
+            height: 100vh;
     }
     </style>
 
