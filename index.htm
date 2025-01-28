@@ -7,7 +7,163 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet"  type="text/css"  href="CSS/style.css">
-  
+  <title>Typing Animation</title>
+  <style>
+      .p-4 {
+          padding: 1rem;
+      }
+      .text-white {
+          color: white;
+      }
+      .bg-dark {
+          background-color: #333;
+      }
+      .animate-typing {
+          font-family: 'Courier New', monospace;
+          display: inline-block;
+          overflow: hidden;
+          border-right: .15em solid #fff;
+          white-space: nowrap;
+          width: 0;
+          animation: typing 4s steps(60) 1s infinite, blinkCaret 0.95s step-end infinite;
+      }
+
+      @keyframes typing {
+          from {
+              width: 0;
+          }
+          to {
+              width: 100%;
+          }
+      }
+
+      @keyframes blinkCaret {
+          50% {
+              border-color: transparent;
+          }
+          100% {
+              border-color: #00ffff;
+          }
+      }
+  </style>
+
+<title>Interactive Navigation</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+    /* General Styles */
+    .d-flex {
+        display: flex;
+    }
+    .flex-row {
+        flex-direction: row;
+    }
+    .text-white {
+        color: white;
+    }
+    .text-center {
+        text-align: center;
+    }
+    .p-3 {
+        padding: 1rem;
+    }
+    .p-4 {
+        padding: 1.5rem;
+    }
+    .bordered {
+        border: 3px solid rgb(245, 221, 12);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .font-div {
+        text-align: center;
+        flex: 1;
+        transition: all 0.3s ease-in-out;
+        cursor: pointer;
+    }
+
+    /* Hover Effect */
+    .font-div:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        opacity: 0.9;
+    }
+
+    .font-div:hover i {
+        animation: bounce 1s infinite;
+    }
+
+    /* Links with Borders */
+    .centerdiv a {
+            display: inline-block;
+            padding: 10px;
+            margin: 5px;
+            border: 2px solid #01f7ff;
+            border-radius: 8px;
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        /* Hover Effect */
+        .centerdiv a:hover {
+            background-color: #fff; /* White background on hover */
+            color: #333; /* Dark text on hover */
+            transform: scale(1.1); /* Slight zoom effect */
+        }
+
+        /* Icon Size */
+        .centerdiv a i {
+            font-size: 24px; /* Icon size */
+        }
+
+        /* Gradient Border */
+        .bordered-gradient {
+            border: 3px solid transparent; /* Transparent border */
+            border-radius: 10px; /* Rounded corners */
+            background-image: linear-gradient(to right, #33f1ff, #0026ff); /* Gradient */
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+            color: white;
+            padding: 0px; /* Space inside */
+        }
+
+
+
+
+    /* Keyframes for Animation */
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {
+            transform: translateY(0);
+        }
+        40% {
+            transform: translateY(-10px);
+        }
+        60% {
+            transform: translateY(-5px);
+        }
+    }
+
+    /* Additional Styling for Icons */
+    .font-div i {
+        color: white;
+        margin-bottom: 5px;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    /* Specific Colors for Each Section */
+    .font-div:nth-child(1) { background-color: #00bb19; }
+    .font-div:nth-child(2) { background-color: #d10000; }
+    .font-div:nth-child(3) { background-color: #15dfe6; }
+    .font-div:nth-child(4) { background-color: #eed70d; }
+    .font-div:nth-child(5) { background-color: #086bff; }
+
+    /* Text Animation on Hover */
+    .font-div:hover span {
+        color: black;
+        font-weight: bold;
+    }
+</style>
+
 </head>
 <body>
     
@@ -16,58 +172,67 @@
     
     <div class="container">
         
-        <div class="row no-gutters">
+        <div class="row no-gutters bordered-gradient">
             <div class="col-lg-4 col-md-4">
                 <img src="Myimages.jpg" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid #24e9f0;">
             </div>
 
             <div class="col-lg-8 col-lg-8" style="background-color: #000000;">
                 <div class="d-flex flex-column">
-                    <div class="p-5  bg-dark text-white">
+                    <div class="p-5  bg-dark text-white bordered">
                         <div class="d-flex flex-row justify-content-between align-items-center">
                             <h1 class="display-4"> Shafiuddin Shimul</h1>
 
-                            <div class="centerdiv" >
-                                <a href="https://www.facebook.com/shafiuddinbhuiyan.shimul/" target="_blank" > <i class="fa fa-facebook"></i></a> 
+                            <div class="centerdiv">
+                                <a href="https://www.facebook.com/shafiuddinbhuiyan.shimul/" target="_blank">
+                                    <i class="fab fa-facebook"></i>
+                                </a>
                             </div>
 
-                            <div class="centerdiv" >
-                                <a href="https://www.linkedin.com/in/md-shafi-uddin-shimul-2410a11b8/" target="_blank"> <i class="fa  fa-linkedin"></i> </a> 
-                            </div>
+                            <div class="centerdiv">
+                <a href="https://www.linkedin.com/in/md-shafi-uddin-shimul-2410a11b8/" target="_blank">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+            </div>
 
-                            <div class="centerdiv" > 
-                                <a href="https://github.com/ShimulDev87" target="_blank"><i class="fa  fa-github-square"></i> </a>
-                                
-                            </div>
-                            <div class="centerdiv" >
-                                <a href="https://stackoverflow.com/users/14993575/shafi-shimul" target="_blank"> <i class="fa fa-stack-overflow"></i></a>
-                                 </div>
+            <div class="centerdiv">
+                <a href="https://github.com/ShimulDev87" target="_blank">
+                    <i class="fab fa-github"></i>
+                </a>
+            </div>
+
+            <div class="centerdiv">
+                <a href="https://stackoverflow.com/users/14993575/shafi-shimul" target="_blank">
+                    <i class="fab fa-stack-overflow"></i>
+                </a>
+            </div>
                         </div>
                     </div>
 
-                    <div class="p-4 text-white bg-dark">
-                        Game Developer & Game Programemer
+                    <div class="p-4 text-white bg-dark animate-text ">
+                        <span class="animate-typing"> Unity Game Developer & Game Programmer</span>
                     </div>
 
-                    <div class="d-flex flex-row text-white text-center">
-                        <div class="p-4 font-div" style="background-color: #47474700;">
-                            <i class="fa  fa-4x d-block" style="background-color: #00000000;"></i>
+                    <div class="d-flex flex-row text-white text-center bordered">
+                        <div class="p-4 font-div" data-toggle="collapse" data-target="#home">
+                            <i class="fa fa-home fa-4x"></i>
+                            <span>Home</span>
                         </div>
-                        <div class="p-4 font-div" style="background-color: #474747;" data-toggle= "collapse" data-target ="#home">
-                            <i class="fa fa-home fa-4x d-block"></i> Home
+                        <div class="p-4 font-div" data-toggle="collapse" data-target="#resume">
+                            <i class="fa fa-graduation-cap fa-2x"></i>
+                            <span>Resume</span>
                         </div>
-                        <div class="p-4  font-div" style="background-color: #8d0000;" data-toggle= "collapse" data-target ="#resume">
-                            <i class="fa fa-graduation-cap fa-2x d-block"></i> Resume
+                        <div class="p-4 font-div" data-toggle="collapse" data-target="#portfolio">
+                            <i class="fa fa-folder fa-4x"></i>
+                            <span>Portfolio</span>
                         </div>
-                        <div class="p-4 font-div"  style="background-color: #413d3d;" data-toggle= "collapse" data-target ="#portfolio">
-                            <i class="fa fa-folder fa-4x d-block"></i> Portfolio
+                        <div class="p-4 font-div" data-toggle="collapse" data-target="#playMyGames">
+                            <i class="fa fa-gamepad fa-4x"></i>
+                            <span> Play Games</span>
                         </div>
-                        <div class="p-3  font-div" style="background-color: #bd0000;" data-toggle= "collapse" data-target="#playMyGames">
-                            <i class="fa fa-gamepad fa-3x d-block"></i>Play 
-                            My Games 
-                        </div>
-                        <div class="p-4  font-div" style="background-color: #333333;" data-toggle= "collapse" data-target="#myContactInfo">
-                            <i class="fa fa-envelope fa-4x d-block"></i> Contact
+                        <div class="p-4 font-div" data-toggle="collapse" data-target="#myContactInfo">
+                            <i class="fa fa-envelope fa-4x"></i>
+                            <span>Contact</span>
                         </div>
                     </div>
                     
@@ -98,7 +263,7 @@
 
 <div class="container">
     <div class="collapse" id="home">
-        <div class="p-5 text-white "  style="background-color: #474747;">
+        <div class="p-5 text-white "  style="background-color: #00bb19;">
             <h2>HOME</h2>
             <p>Check out my Skills and Objectives</p>
         </div>
@@ -127,11 +292,11 @@
 
             <h4>Game Engine : Unity3D</h4>
             <div class="progress">
-                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width:60%">60%</div>
+                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width:70%">70%</div>
             </div>
             <h3>Programming Language : C#</h4>
             <div class="progress">
-                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width:50%">50%</div>
+                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width:70%">70%</div>
             </div>
             <h3>Game Engine : Unreal Engine 4</h4>
             <div class="progress">
@@ -158,7 +323,7 @@
         </div>
     </div>
     <div class="collapse" id="resume">
-        <div class="p-5 text-white" style="background-color: #8d0000;">
+        <div class="p-5 text-white" style="background-color: #d10000;">
             <h2>My Resume</h2>
             <p>Check out more about educational and work experience</p>
         </div>
@@ -305,7 +470,7 @@
         
     </div>
     <div class="" id="portfolio">
-        <div class="p-5 text-white " style="background-color: #413d3d;">
+        <div class="p-5 text-white " style="background-color: #15dfe6;">
             <h2>Portfolio</h2>
             <p>Check out my Personal/Hobby Projects and work Professional Projects</p>
         </div>
@@ -656,7 +821,7 @@
     </div>
 
     <div class="collapse" id="playMyGames">
-        <div class="p-5 text-white " style="background-color: #bd0000;">
+        <div class="p-5 text-white " style="background-color: #eed70d;">
             <h2>Play My Games</h2>
             <p>Check out more about Trandy and satisfaction Games</p>
         </div>
@@ -695,7 +860,7 @@
     </div>
     
     <div class="collapse" id="myContactInfo">
-        <div class="p-5 text-white" style="background-color: #333333;">
+        <div class="p-5 text-white" style="background-color: #5e08ff;">
             <div class="card card-body">
                 
                 <div class=" card-deck ">
@@ -792,8 +957,8 @@
 
 
 
-<div class="container">
-    <footer class="p-3 bg-dark text-white text-center">
+<div class="container ">
+    <footer class="p-3 bg-dark text-white text-center ">
         <i class="fa fa-copyright"></i>Unity_GameDeveloper_Shafiuddin-Shimul
         
     </footer>
