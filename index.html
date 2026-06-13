@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shafiuddin Shimul — Unity Game Developer</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0a0a0f;
+      --surface:   #111118;
+      --card:      #16161f;
+      --border:    rgba(255,255,255,0.08);
+      --border-hi: rgba(255,255,255,0.15);
+      --accent:    #00e5a0;
+      --accent2:   #7c6ff7;
+      --text:      #f0f0f5;
+      --muted:     #888899;
+      --dim:       #444455;
+      --font-head: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --radius:    12px;
+      --radius-sm: 6px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.65;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    .wrap { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── HEADER ── */
+    header { padding: 64px 0 48px; border-bottom: 1px solid var(--border); }
+    .hero { display: grid; grid-template-columns: auto 1fr; gap: 40px; align-items: center; }
+
+    .avatar-wrap { position: relative; width: 120px; height: 120px; flex-shrink: 0; }
+    .avatar-wrap::after {
+      content: ''; position: absolute; inset: -3px; border-radius: 50%;
+      background: conic-gradient(var(--accent), var(--accent2), var(--accent)); z-index: -1;
+    }
+    .avatar-wrap img {
+      width: 120px; height: 120px; border-radius: 50%; object-fit: cover;
+      border: 3px solid var(--bg); display: block;
+    }
+
+    .eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.12em; color: var(--accent); text-transform: uppercase; margin-bottom: 8px; }
+    .hero-name { font-family: var(--font-head); font-size: clamp(28px, 5vw, 44px); font-weight: 700; line-height: 1.1; margin-bottom: 12px; }
+
+    .typing-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+    .typing-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
+    .typing-text {
+      font-size: 14px; color: var(--muted);
+      overflow: hidden; white-space: nowrap;
+      border-right: 2px solid var(--accent);
+      width: 0;
+      animation: type 3.5s steps(42) 0.5s forwards, blink 0.8s step-end infinite;
+    }
+    @keyframes type { to { width: 100%; } }
+    @keyframes blink { 50% { border-color: transparent; } }
+
+    .hero-socials { display: flex; gap: 10px; flex-wrap: wrap; }
+    .hero-socials a {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border-radius: 999px;
+      border: 1px solid var(--border-hi);
+      color: var(--muted); font-size: 13px; text-decoration: none; transition: all 0.2s;
+    }
+    .hero-socials a:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── NAV ── */
+    .nav-tabs {
+      display: flex; overflow-x: auto; gap: 4px;
+      padding: 20px 0; border-bottom: 1px solid var(--border); scrollbar-width: none;
+    }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+    .nav-tab {
+      flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 6px;
+      padding: 12px 24px; border-radius: var(--radius); border: 1px solid transparent;
+      cursor: pointer; transition: all 0.2s; text-decoration: none;
+      font-size: 13px; color: var(--muted); background: transparent;
+    }
+    .nav-tab i { font-size: 22px; }
+    .nav-tab:hover { background: var(--surface); color: var(--text); }
+    .nav-tab.active { background: var(--surface); border-color: var(--border-hi); color: var(--accent); }
+
+    /* ── SECTIONS ── */
+    .section { padding: 48px 0; border-bottom: 1px solid var(--border); display: none; }
+    .section.active { display: block; }
+    .section-title { font-family: var(--font-head); font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+    .section-sub { color: var(--muted); font-size: 14px; margin-bottom: 32px; }
+
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 16px; }
+    .card h3 { font-family: var(--font-head); font-size: 17px; font-weight: 600; margin-bottom: 6px; }
+    .card p { color: var(--muted); font-size: 14px; }
+
+    /* ── HOME ── */
+    .skills-grid { display: grid; gap: 12px; }
+    .skill-row { display: grid; grid-template-columns: 200px 1fr auto; align-items: center; gap: 12px; }
+    .skill-name { font-size: 13px; color: var(--muted); }
+    .skill-bar { height: 6px; background: var(--surface); border-radius: 999px; overflow: hidden; border: 1px solid var(--border); }
+    .skill-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--accent2), var(--accent)); }
+    .skill-pct { font-size: 12px; color: var(--dim); width: 32px; text-align: right; }
+
+    .objectives { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 24px; }
+    .obj-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+    .obj-card i { font-size: 24px; color: var(--accent); margin-bottom: 12px; display: block; }
+    .obj-card h4 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+    .obj-card p { font-size: 13px; color: var(--muted); }
+
+    /* ── RESUME / TIMELINE ── */
+    .resume-h3 { font-family: var(--font-head); font-size: 16px; font-weight: 600; color: var(--accent); margin-bottom: 24px; display: flex; align-items: center; gap: 8px; }
+    .resume-h3 i { font-size: 18px; }
+
+    .timeline { position: relative; padding-left: 0; }
+
+    .tl-item {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 0;
+      margin-bottom: 0;
+      position: relative;
+    }
+
+    /* left column */
+    .tl-left {
+      padding: 0 32px 40px 0;
+      text-align: right;
+      position: relative;
+    }
+    .tl-left::after {
+      content: '';
+      position: absolute; right: -1px; top: 6px; bottom: 0;
+      width: 1px; background: var(--border);
+    }
+    .tl-item:last-child .tl-left::after { display: none; }
+
+    .tl-dot {
+      position: absolute; right: -7px; top: 4px;
+      width: 14px; height: 14px; border-radius: 50%;
+      border: 2px solid var(--accent); background: var(--bg);
+      z-index: 1;
+    }
+    .tl-date { font-size: 12px; color: var(--accent); font-weight: 600; letter-spacing: 0.04em; line-height: 1.4; }
+    .tl-duration {
+      display: inline-block; margin-top: 4px;
+      font-size: 11px; padding: 2px 8px; border-radius: 999px;
+      background: rgba(0,229,160,0.1); color: var(--accent); border: 1px solid rgba(0,229,160,0.2);
+    }
+
+    /* right column */
+    .tl-right { padding: 0 0 40px 32px; }
+    .tl-company-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 6px; }
+    .tl-logo {
+      width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; font-family: var(--font-head);
+    }
+    .tl-company-info {}
+    .tl-title { font-family: var(--font-head); font-size: 15px; font-weight: 600; line-height: 1.3; }
+    .tl-company { font-size: 13px; color: var(--muted); margin-top: 1px; }
+    .tl-desc { font-size: 13px; color: var(--muted); line-height: 1.75; margin: 10px 0 0; }
+    .tl-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+    .tl-tag { font-size: 11px; padding: 2px 8px; border-radius: 4px; background: var(--surface); color: var(--dim); border: 1px solid var(--border); }
+
+    /* logo color variants */
+    .logo-teal  { background: rgba(0,229,160,0.12);  color: var(--accent); }
+    .logo-purple{ background: rgba(124,111,247,0.12); color: var(--accent2); }
+    .logo-blue  { background: rgba(100,180,255,0.12); color: #64b4ff; }
+    .logo-amber { background: rgba(255,185,80,0.12);  color: #ffb950; }
+    .logo-coral { background: rgba(255,100,80,0.12);  color: #ff6450; }
+    .logo-pink  { background: rgba(220,100,180,0.12); color: #dc64b4; }
+    .logo-gray  { background: rgba(136,136,153,0.12); color: var(--muted); }
+
+    /* edu cards */
+    .edu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .edu-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+    .edu-card .degree { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .edu-card .school { font-size: 13px; color: var(--muted); }
+    .edu-card .year { font-size: 12px; color: var(--accent); margin-top: 8px; }
+
+    /* ── PORTFOLIO ── */
+    .port-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 36px; }
+    .port-filter {
+      display: flex; align-items: center; gap: 6px;
+      padding: 7px 16px; border-radius: 999px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--muted); font-size: 13px; cursor: pointer;
+      transition: all 0.2s; font-family: var(--font-body);
+    }
+    .port-filter i { font-size: 14px; }
+    .port-filter:hover { border-color: var(--border-hi); color: var(--text); }
+    .port-filter.active { background: var(--accent); border-color: var(--accent); color: #000; font-weight: 600; }
+
+    .cat-section { margin-bottom: 48px; }
+    .cat-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    .cat-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .cat-icon.blue   { background: rgba(100,180,255,0.12); color: #64b4ff; }
+    .cat-icon.purple { background: rgba(124,111,247,0.12); color: var(--accent2); }
+    .cat-icon.amber  { background: rgba(255,185,80,0.12);  color: #ffb950; }
+    .cat-icon.coral  { background: rgba(255,100,80,0.12);  color: #ff6450; }
+    .cat-icon.green  { background: rgba(0,229,160,0.12);   color: var(--accent); }
+    .cat-title { font-family: var(--font-head); font-size: 17px; font-weight: 600; }
+    .cat-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-left: auto; }
+    .cat-tag { font-size: 11px; padding: 3px 9px; border-radius: 999px; background: var(--surface); color: var(--muted); border: 1px solid var(--border); }
+
+    .proj-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+    .proj-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: border-color 0.2s, transform 0.2s; }
+    .proj-card:hover { border-color: var(--border-hi); transform: translateY(-2px); }
+
+    .video-thumb { position: relative; width: 100%; padding-top: 56.25%; background: var(--surface); overflow: hidden; }
+    .video-thumb iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+    .video-thumb .placeholder { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: var(--dim); font-size: 13px; }
+    .video-thumb .placeholder i { font-size: 36px; }
+
+    .proj-body { padding: 16px; }
+    .proj-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+    .badge { font-size: 11px; padding: 2px 8px; border-radius: 999px; font-weight: 600; }
+    .badge-pro   { background: rgba(100,180,255,0.15); color: #64b4ff; }
+    .badge-hobby { background: rgba(0,229,160,0.15);   color: var(--accent); }
+    .badge-year  { background: var(--surface); color: var(--dim); border: 1px solid var(--border); font-weight: 400; }
+    .badge-plat  { background: var(--surface); color: var(--dim); border: 1px solid var(--border); font-weight: 400; }
+
+    .proj-title { font-family: var(--font-head); font-size: 14px; font-weight: 600; margin-bottom: 6px; line-height: 1.4; }
+    .proj-desc  { font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 10px; }
+    .proj-pills { display: flex; flex-wrap: wrap; gap: 4px; }
+    .pill { font-size: 11px; padding: 3px 8px; border-radius: 4px; background: var(--surface); color: var(--dim); border: 1px solid var(--border); }
+
+    /* ── CONTACT ── */
+    .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .contact-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; display: flex; align-items: flex-start; gap: 14px; }
+    .contact-item i { font-size: 22px; color: var(--accent); margin-top: 2px; flex-shrink: 0; }
+    .contact-item .label { font-size: 12px; color: var(--muted); margin-bottom: 2px; }
+    .contact-item .value { font-size: 14px; font-weight: 500; word-break: break-all; }
+    .contact-item a { color: var(--text); text-decoration: none; }
+    .contact-item a:hover { color: var(--accent); }
+
+    /* ── FOOTER ── */
+    footer { padding: 32px 0; text-align: center; font-size: 13px; color: var(--dim); border-top: 1px solid var(--border); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .hero { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+      .hero-socials { justify-content: center; }
+      .tl-item { grid-template-columns: 1fr; }
+      .tl-left { text-align: left; padding: 0 0 6px 20px; }
+      .tl-left::after { left: 6px; right: auto; top: 0; }
+      .tl-dot { left: 0; right: auto; }
+      .tl-right { padding: 0 0 32px 20px; }
+      .skill-row { grid-template-columns: 1fr; }
+      .cat-tags { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .typing-text { animation: none; width: 100%; border-right: none; }
+      .typing-dot  { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header>
+  <div class="wrap">
+    <div class="hero">
+      <div class="avatar-wrap">
+        <img src="Myimages.jpg" alt="Shafiuddin Shimul">
+      </div>
+      <div class="hero-text">
+        <p class="eyebrow">Unity Game Developer · Bangladesh</p>
+        <h1 class="hero-name">Shafiuddin Shimul</h1>
+        <div class="typing-wrap">
+          <span class="typing-dot"></span>
+          <span class="typing-text">Unity3D · Multiplayer · Mobile · Game Architecture</span>
+        </div>
+        <div class="hero-socials">
+          <a href="https://www.facebook.com/shafiuddinbhuiyan.shimul/" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
+          <a href="https://www.linkedin.com/in/md-shafi-uddin-shimul-2410a11b8/" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+          <a href="https://github.com/ShimulDev87" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+          <a href="https://stackoverflow.com/users/14993575/shafi-shimul" target="_blank"><i class="fab fa-stack-overflow"></i> Stack Overflow</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ══ NAV ══ -->
+<div class="wrap">
+  <nav class="nav-tabs" id="mainNav">
+    <a class="nav-tab active" data-target="home" href="#"><i class="fa fa-house"></i> Home</a>
+    <a class="nav-tab" data-target="resume" href="#"><i class="fa fa-graduation-cap"></i> Resume</a>
+    <a class="nav-tab" data-target="portfolio" href="#"><i class="fa fa-folder-open"></i> Portfolio</a>
+    <a class="nav-tab" data-target="games" href="#"><i class="fa fa-gamepad"></i> Play Games</a>
+    <a class="nav-tab" data-target="contact" href="#"><i class="fa fa-envelope"></i> Contact</a>
+  </nav>
+</div>
+
+<!-- ══════════════════════════════════════
+     HOME
+══════════════════════════════════════ -->
+<div class="wrap">
+<section class="section active" id="home">
+  <h2 class="section-title">About Me</h2>
+  <p class="section-sub">Who I am and what I bring to a team</p>
+
+  <div class="card">
+    <p>Hi, I'm Md. Shafi Uddin (Shimul) — a Unity game developer with <strong>5+ years of professional experience</strong> building 2D/3D games across mobile, PC, and WebGL. I hold a B.Sc. in Electrical and Electronics Engineering from Southeast University, Dhaka. My passion lies in multiplayer systems, clean game architecture, and shipping polished products that players enjoy.</p>
+  </div>
+
+  <div class="objectives">
+    <div class="obj-card">
+      <i class="fa fa-network-wired"></i>
+      <h4>Multiplayer Systems</h4>
+      <p>Photon PUN2, Photon Fusion 2, Netcode for GameObjects — real-time online games for mobile and PC.</p>
+    </div>
+    <div class="obj-card">
+      <i class="fa fa-layer-group"></i>
+      <h4>Game Architecture</h4>
+      <p>MVC, OOP, Object Pooling, ScriptableObjects, Addressables — scalable and maintainable codebases.</p>
+    </div>
+    <div class="obj-card">
+      <i class="fa fa-mobile-screen"></i>
+      <h4>Mobile Optimization</h4>
+      <p>Android & iOS performance tuning, ad SDK integration (AdMob, Unity Ads, Yodo1 MAS), WebGL builds.</p>
+    </div>
+    <div class="obj-card">
+      <i class="fa fa-code"></i>
+      <h4>Tools & SDKs</h4>
+      <p>DoTween, Shader Graph, Firebase, PlayFab, Git/GitHub, Puppet Master, Ragdoll physics.</p>
+    </div>
+  </div>
+
+  <h3 style="font-family:var(--font-head);font-size:18px;font-weight:600;margin:36px 0 20px">Skills</h3>
+  <div class="skills-grid">
+    <div class="skill-row">
+      <span class="skill-name">Unity 3D</span>
+      <div class="skill-bar"><div class="skill-fill" style="width:75%"></div></div>
+      <span class="skill-pct">75%</span>
+    </div>
+    <div class="skill-row">
+      <span class="skill-name">C# Programming</span>
+      <div class="skill-bar"><div class="skill-fill" style="width:75%"></div></div>
+      <span class="skill-pct">75%</span>
+    </div>
+    <div class="skill-row">
+      <span class="skill-name">Photon Fusion / PUN2</span>
+      <div class="skill-bar"><div class="skill-fill" style="width:60%"></div></div>
+      <span class="skill-pct">60%</span>
+    </div>
+    <div class="skill-row">
+      <span class="skill-name">Firebase / PlayFab</span>
+      <div class="skill-bar"><div class="skill-fill" style="width:40%"></div></div>
+      <span class="skill-pct">40%</span>
+    </div>
+    <div class="skill-row">
+      <span class="skill-name">Git / GitHub</span>
+      <div class="skill-bar"><div class="skill-fill" style="width:50%"></div></div>
+      <span class="skill-pct">50%</span>
+    </div>
+    <div class="skill-row">
+      <span class="skill-name">Unreal Engine 4</span>
+      <div class="skill-bar"><div class="skill-fill" style="width:30%"></div></div>
+      <span class="skill-pct">30%</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     RESUME
+══════════════════════════════════════ -->
+<section class="section" id="resume">
+  <h2 class="section-title">Resume</h2>
+  <p class="section-sub">Professional experience and education</p>
+
+  <div class="resume-h3"><i class="fa fa-briefcase"></i> Work Experience</div>
+
+  <div class="timeline">
+
+    <!-- Sparktech Agency -->
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot"></div>
+        <div class="tl-date">June 2025<br>Jan 2026</div>
+        <span class="tl-duration">8 months</span>
+      </div>
+      <div class="tl-right">
+        <div class="tl-company-row">
+          <div class="tl-logo logo-teal">SP</div>
+          <div class="tl-company-info">
+            <div class="tl-title">Mid-Level Unity3D Game Developer</div>
+            <div class="tl-company">Sparktech Agency</div>
+          </div>
+        </div>
+        <div class="tl-desc">Developed 2D and 3D games for PC, Android, and WebGL. Integrated online multiplayer using Photon PUN2 and Fusion, user authentication via Firebase and PlayFab, leaderboards, Unity Ads, AdMob, and other monetization SDKs.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">Fractaled Path 3D</span>
+          <span class="tl-tag">Cat Fight 3D</span>
+          <span class="tl-tag">Euchre Card Game</span>
+          <span class="tl-tag">Photon Fusion</span>
+          <span class="tl-tag">Firebase</span>
+          <span class="tl-tag">AdMob</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Naptech -->
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot"></div>
+        <div class="tl-date">July 2024<br>Apr 2025</div>
+        <span class="tl-duration">10 months</span>
+      </div>
+      <div class="tl-right">
+        <div class="tl-company-row">
+          <div class="tl-logo logo-purple">NT</div>
+          <div class="tl-company-info">
+            <div class="tl-title">Mid-Level Unity3D Game Developer</div>
+            <div class="tl-company">Naptech Games Ltd.</div>
+          </div>
+        </div>
+        <div class="tl-desc">Worked on hyper-casual, casual, and board games — created, reskinned, and modified in-house and client projects for Android and WebGL. Implemented ad monetization pipelines.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">Ludo Mania</span>
+          <span class="tl-tag">Brick Breaker 2D</span>
+          <span class="tl-tag">Hop Master / Zombie Hero / Two Cars</span>
+          <span class="tl-tag">PUN2</span>
+          <span class="tl-tag">DoTween</span>
+          <span class="tl-tag">MVC</span>
+          <span class="tl-tag">Object Pooling</span>
+          <span class="tl-tag">Shader Graph</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TitanForge -->
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot"></div>
+        <div class="tl-date">Mar 2024<br>June 2024</div>
+        <span class="tl-duration">4 months</span>
+      </div>
+      <div class="tl-right">
+        <div class="tl-company-row">
+          <div class="tl-logo logo-amber">TF</div>
+          <div class="tl-company-info">
+            <div class="tl-title">Mid-Level Unity3D Game Developer</div>
+            <div class="tl-company">TitanForge Studios</div>
+          </div>
+        </div>
+        <div class="tl-desc">Built hyper-casual and hybrid-casual games using ragdoll physics and Puppet Master for publisher and client projects.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">Lost Survivor — Alien Planet</span>
+          <span class="tl-tag">Puppet Master</span>
+          <span class="tl-tag">Ragdoll</span>
+          <span class="tl-tag">Shader Graph</span>
+          <span class="tl-tag">DoTween</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ghost Interactive -->
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot"></div>
+        <div class="tl-date">Jan 2024<br>Mar 2024</div>
+        <span class="tl-duration">3 months</span>
+      </div>
+      <div class="tl-right">
+        <div class="tl-company-row">
+          <div class="tl-logo logo-coral">GI</div>
+          <div class="tl-company-info">
+            <div class="tl-title">Game Programmer</div>
+            <div class="tl-company">Ghost Interactive Ltd.</div>
+          </div>
+        </div>
+        <div class="tl-desc">Created three Android titles from scratch for the studio.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">Parcel Delivery Boy</span>
+          <span class="tl-tag">Survival 3D</span>
+          <span class="tl-tag">Planet Red (Shooter)</span>
+          <span class="tl-tag">Bus Simulator 3D</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Next IT -->
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot"></div>
+        <div class="tl-date">Mar 2023<br>Sep 2023</div>
+        <span class="tl-duration">7 months</span>
+      </div>
+      <div class="tl-right">
+        <div class="tl-company-row">
+          <div class="tl-logo logo-blue">NX</div>
+          <div class="tl-company-info">
+            <div class="tl-title">Software Engineer — Unity3D</div>
+            <div class="tl-company">Next IT Ltd.</div>
+          </div>
+        </div>
+        <div class="tl-desc">Built restaurant management software for multi-touch devices and a PC game for multi-touch hardware using Unity3D and C#.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">Multi-touch Software</span>
+          <span class="tl-tag">Restaurant UI</span>
+          <span class="tl-tag">PC Game</span>
+          <span class="tl-tag">C#</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Olivine -->
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot"></div>
+        <div class="tl-date">Nov 2022<br>Feb 2023</div>
+        <span class="tl-duration">4 months</span>
+      </div>
+      <div class="tl-right">
+        <div class="tl-company-row">
+          <div class="tl-logo logo-pink">OL</div>
+          <div class="tl-company-info">
+            <div class="tl-title">Unity Developer (Contractual)</div>
+            <div class="tl-company">Olivine Ltd.</div>
+          </div>
+        </div>
+        <div class="tl-desc">Created 2D and 3D casual games for client projects.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">2D Casual</span>
+          <span class="tl-tag">3D Casual</span>
+          <span class="tl-tag">Android</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Riseup Labs -->
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot"></div>
+        <div class="tl-date">May 2022<br>Sep 2022</div>
+        <span class="tl-duration">5 months</span>
+      </div>
+      <div class="tl-right">
+        <div class="tl-company-row">
+          <div class="tl-logo logo-teal">RL</div>
+          <div class="tl-company-info">
+            <div class="tl-title">Game Developer</div>
+            <div class="tl-company">Riseup Labs</div>
+          </div>
+        </div>
+        <div class="tl-desc">Built 2D and 3D games across Android, iOS, PC, and console platforms.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">Android</span>
+          <span class="tl-tag">iOS</span>
+          <span class="tl-tag">PC</span>
+          <span class="tl-tag">Console</span>
+          <span class="tl-tag">2D &amp; 3D</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- March Robotics -->
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot"></div>
+        <div class="tl-date">Jan 2022<br>May 2022</div>
+        <span class="tl-duration">5 months</span>
+      </div>
+      <div class="tl-right">
+        <div class="tl-company-row">
+          <div class="tl-logo logo-gray">MR</div>
+          <div class="tl-company-info">
+            <div class="tl-title">Game Developer (Contractual)</div>
+            <div class="tl-company">March Robotics & IT Solutions Ltd.</div>
+          </div>
+        </div>
+        <div class="tl-desc">Developed a simulation game for PC platform.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">Simulation</span>
+          <span class="tl-tag">PC</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Playense -->
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot"></div>
+        <div class="tl-date">Feb 2021<br>May 2021</div>
+        <span class="tl-duration">4 months</span>
+      </div>
+      <div class="tl-right">
+        <div class="tl-company-row">
+          <div class="tl-logo logo-amber">PL</div>
+          <div class="tl-company-info">
+            <div class="tl-title">Unity3D Game Developer</div>
+            <div class="tl-company">Playense</div>
+          </div>
+        </div>
+        <div class="tl-desc">Hyper-casual games using ragdoll, Puppet Master, DoTween, OOP, MVC, and Object Pooling for publisher and client projects.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">Giant Crusher</span>
+          <span class="tl-tag">Crazy Dunk</span>
+          <span class="tl-tag">Hyper Casual</span>
+          <span class="tl-tag">Android</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pechas -->
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot"></div>
+        <div class="tl-date">Oct 2020<br>Jan 2021</div>
+        <span class="tl-duration">4 months</span>
+      </div>
+      <div class="tl-right">
+        <div class="tl-company-row">
+          <div class="tl-logo logo-blue">PC</div>
+          <div class="tl-company-info">
+            <div class="tl-title">Junior Game Developer</div>
+            <div class="tl-company">Pechas Games Studio</div>
+          </div>
+        </div>
+        <div class="tl-desc">Implemented game features, wrote gameplay code, and created visual content for various titles.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">Guli Danda</span>
+          <span class="tl-tag">Android</span>
+          <span class="tl-tag">C#</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alesha Engineering -->
+    <div class="tl-item">
+      <div class="tl-left">
+        <div class="tl-dot"></div>
+        <div class="tl-date">Sep 2017<br>Jan 2020</div>
+        <span class="tl-duration">2 yrs 4 mos</span>
+      </div>
+      <div class="tl-right">
+        <div class="tl-company-row">
+          <div class="tl-logo logo-gray">AE</div>
+          <div class="tl-company-info">
+            <div class="tl-title">Executive Engineer</div>
+            <div class="tl-company">Alesha Engineering & Services Ltd.</div>
+          </div>
+        </div>
+        <div class="tl-desc">Electrical engineering — industrial installation, troubleshooting, substation work, PLC programming, and VFD/inverter-based automation.</div>
+        <div class="tl-tags">
+          <span class="tl-tag">PLC Programming</span>
+          <span class="tl-tag">AutoCAD Electrical</span>
+          <span class="tl-tag">VFD / Inverter</span>
+          <span class="tl-tag">Substation</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /timeline -->
+
+  <div class="resume-h3" style="margin-top:48px"><i class="fa fa-graduation-cap"></i> Education</div>
+  <div class="edu-grid">
+    <div class="edu-card">
+      <div class="degree">B.Sc. Electrical &amp; Electronics Engineering</div>
+      <div class="school">Southeast University, Dhaka</div>
+      <div class="year">2010 – 2014</div>
+    </div>
+    <div class="edu-card">
+      <div class="degree">HSC</div>
+      <div class="school">Birshrestho Munshi Abdur Rouf Rifles College, Dhaka</div>
+      <div class="year">2004 – 2006</div>
+    </div>
+    <div class="edu-card">
+      <div class="degree">SSC</div>
+      <div class="school">Dhaka Collegiate School</div>
+      <div class="year">2004</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     PORTFOLIO
+══════════════════════════════════════ -->
+<section class="section" id="portfolio">
+  <h2 class="section-title">Portfolio</h2>
+  <p class="section-sub">Projects organized by specialty — filter to explore</p>
+
+  <div class="port-filters" id="portFilters">
+    <button class="port-filter active" data-filter="all"><i class="fa fa-grip"></i> All projects</button>
+    <button class="port-filter" data-filter="multiplayer"><i class="fa fa-wifi"></i> Online multiplayer</button>
+    <button class="port-filter" data-filter="architecture"><i class="fa fa-layer-group"></i> Architecture &amp; patterns</button>
+    <button class="port-filter" data-filter="casual"><i class="fa fa-bolt"></i> Hyper / hybrid casual</button>
+    <button class="port-filter" data-filter="simulation"><i class="fa fa-car"></i> Simulation &amp; 3D</button>
+    <button class="port-filter" data-filter="board"><i class="fa fa-chess"></i> Board, card &amp; puzzle</button>
+  </div>
+
+  <!-- MULTIPLAYER -->
+  <div class="cat-section" data-section="multiplayer">
+    <div class="cat-header">
+      <div class="cat-icon blue"><i class="fa fa-wifi"></i></div>
+      <div class="cat-title">Online Multiplayer</div>
+      <div class="cat-tags"><span class="cat-tag">Photon Fusion</span><span class="cat-tag">PUN2</span><span class="cat-tag">NGO</span><span class="cat-tag">Firebase Auth</span></div>
+    </div>
+    <div class="proj-grid">
+      <div class="proj-card" data-cat="multiplayer">
+        <div class="video-thumb"><iframe src="https://www.youtube.com/embed/r6GU2le1KGg?si=Rq3WYH7ftrsg1L8" title="Euchre Card Game 2D" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="proj-body">
+          <div class="proj-meta"><span class="badge badge-pro">Professional</span><span class="badge badge-plat">Mobile</span><span class="badge badge-year">Sparktech · 2025</span></div>
+          <div class="proj-title">Euchre Card Game 2D</div>
+          <div class="proj-desc">Online multiplayer card game with real-time state sync. Single player and online multiplayer modes.</div>
+          <div class="proj-pills"><span class="pill">Photon Fusion</span><span class="pill">State sync</span><span class="pill">Firebase Auth</span><span class="pill">PlayFab Leaderboard</span></div>
+        </div>
+      </div>
+      <div class="proj-card" data-cat="multiplayer">
+        <div class="video-thumb"><div class="placeholder"><i class="fa fa-gamepad"></i><span>Add your multiplayer project video</span></div></div>
+        <div class="proj-body">
+          <div class="proj-meta"><span class="badge badge-hobby">Hobby</span><span class="badge badge-plat">PC</span></div>
+          <div class="proj-title">KoF-Style 2D Fighting Game</div>
+          <div class="proj-desc">1v1 online fighting game with frame-based combat, custom hit detection, and rollback-ready input handling.</div>
+          <div class="proj-pills"><span class="pill">Photon Fusion 2</span><span class="pill">Input prediction</span><span class="pill">State machine</span><span class="pill">Animator Controller</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARCHITECTURE -->
+  <div class="cat-section" data-section="architecture">
+    <div class="cat-header">
+      <div class="cat-icon purple"><i class="fa fa-layer-group"></i></div>
+      <div class="cat-title">Architecture &amp; Design Patterns</div>
+      <div class="cat-tags"><span class="cat-tag">MVC</span><span class="cat-tag">OOP</span><span class="cat-tag">Object Pooling</span><span class="cat-tag">ScriptableObject</span><span class="cat-tag">Addressables</span></div>
+    </div>
+    <div class="proj-grid">
+      <div class="proj-card" data-cat="architecture">
+        <div class="video-thumb"><iframe src="https://www.youtube.com/embed/xxv-MhQY0hM?si=4-NjSkijqmWdnYhO" title="Fractaled Path 3D" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="proj-body">
+          <div class="proj-meta"><span class="badge badge-pro">Professional</span><span class="badge badge-plat">PC / Windows</span><span class="badge badge-year">Sparktech · 2025</span></div>
+          <div class="proj-title">Fractaled Path 3D</div>
+          <div class="proj-desc">3D platformer puzzle — state-machine level progression with modular, data-driven architecture.</div>
+          <div class="proj-pills"><span class="pill">State machine</span><span class="pill">MVC</span><span class="pill">Addressables</span><span class="pill">Shader Graph</span></div>
+        </div>
+      </div>
+      <div class="proj-card" data-cat="architecture">
+        <div class="video-thumb"><iframe src="https://www.youtube.com/embed/Sz_eK_fnlIM?si=3M99S17AKQPIdont" title="Ludo Mania" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="proj-body">
+          <div class="proj-meta"><span class="badge badge-pro">Professional</span><span class="badge badge-plat">Android · iOS</span><span class="badge badge-year">Naptech · 2024</span></div>
+          <div class="proj-title">Ludo Mania</div>
+          <div class="proj-desc">Classic board game with 3 modes and 2/3/4-player sub-modes. Event-driven architecture with clean separation of game logic and UI.</div>
+          <div class="proj-pills"><span class="pill">OOP</span><span class="pill">MVC</span><span class="pill">Event system</span><span class="pill">Object Pooling</span></div>
+        </div>
+      </div>
+      <div class="proj-card" data-cat="architecture">
+        <div class="video-thumb"><iframe src="https://www.youtube.com/embed/fINP2P__dYY?si=9QhC1Va94L9IxZnA" title="Brick Breaker" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="proj-body">
+          <div class="proj-meta"><span class="badge badge-pro">Professional</span><span class="badge badge-plat">Android · WebGL</span><span class="badge badge-year">Naptech · 2025</span></div>
+          <div class="proj-title">Brick Breaker 2D</div>
+          <div class="proj-desc">Puzzle game with object pooling for efficient brick spawning and DoTween-based animation pipeline.</div>
+          <div class="proj-pills"><span class="pill">Object Pooling</span><span class="pill">DoTween</span><span class="pill">ScriptableObject</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASUAL -->
+  <div class="cat-section" data-section="casual">
+    <div class="cat-header">
+      <div class="cat-icon amber"><i class="fa fa-bolt"></i></div>
+      <div class="cat-title">Hyper Casual &amp; Hybrid Casual</div>
+      <div class="cat-tags"><span class="cat-tag">Ragdoll</span><span class="cat-tag">Puppet Master</span><span class="cat-tag">DoTween</span><span class="cat-tag">Unity Ads</span><span class="cat-tag">AdMob</span></div>
+    </div>
+    <div class="proj-grid">
+      <div class="proj-card" data-cat="casual">
+        <div class="video-thumb"><iframe src="https://www.youtube.com/embed/IgU38iQ05Go?si=LI6lz38NYvsf7UoZ" title="Lost Survivor" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="proj-body">
+          <div class="proj-meta"><span class="badge badge-pro">Professional</span><span class="badge badge-plat">Android · iOS</span><span class="badge badge-year">TitanForge · 2024</span></div>
+          <div class="proj-title">Lost Survivor — Alien Planet</div>
+          <div class="proj-desc">3D hyper-casual survival: collect gems, upgrade skills, defeat aliens and robots using Puppet Master ragdoll system.</div>
+          <div class="proj-pills"><span class="pill">Puppet Master</span><span class="pill">Ragdoll</span><span class="pill">Shader Graph</span></div>
+        </div>
+      </div>
+      <div class="proj-card" data-cat="casual">
+        <div class="video-thumb"><iframe src="https://www.youtube.com/embed/AzBXoZFZL8w" title="Giant Crusher" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="proj-body">
+          <div class="proj-meta"><span class="badge badge-pro">Professional</span><span class="badge badge-plat">Android</span><span class="badge badge-year">Playense · 2021</span></div>
+          <div class="proj-title">Giant Crusher</div>
+          <div class="proj-desc">Infinite runner with weapon-grow mechanic — collect items and crush the giant boss. Published title.</div>
+          <div class="proj-pills"><span class="pill">Runner mechanic</span><span class="pill">DoTween</span><span class="pill">Unity Ads</span></div>
+        </div>
+      </div>
+      <div class="proj-card" data-cat="casual">
+        <div class="video-thumb"><iframe src="https://www.youtube.com/embed/m1VgAXWP9f8?si=qkhXbS8cGWUZabO0" title="Three Combined Games" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="proj-body">
+          <div class="proj-meta"><span class="badge badge-pro">Professional</span><span class="badge badge-plat">Android · WebGL</span><span class="badge badge-year">Naptech · 2024</span></div>
+          <div class="proj-title">Three Combined Games</div>
+          <div class="proj-desc">Hop Master 3D, Zombie Hero 2D, Two Cars 2D — reskin, modification, and ad integration pipeline for 3 in-house titles.</div>
+          <div class="proj-pills"><span class="pill">AdMob</span><span class="pill">Unity Ads</span><span class="pill">Reskin pipeline</span></div>
+        </div>
+      </div>
+      <div class="proj-card" data-cat="casual">
+        <div class="video-thumb"><iframe src="https://www.youtube.com/embed/8dSHlliUGZc?si=VBE2j2Nvnvn3d_WZ" title="Crazy Dunk" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="proj-body">
+          <div class="proj-meta"><span class="badge badge-pro">Professional</span><span class="badge badge-plat">Android</span><span class="badge badge-year">Playense · 2021</span></div>
+          <div class="proj-title">Crazy Dunk (Basketball)</div>
+          <div class="proj-desc">3D basketball hyper-casual — physics-based ball trajectory, AI opponent, score the dunk.</div>
+          <div class="proj-pills"><span class="pill">AI opponent</span><span class="pill">Physics trajectory</span><span class="pill">DoTween</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIMULATION -->
+  <div class="cat-section" data-section="simulation">
+    <div class="cat-header">
+      <div class="cat-icon coral"><i class="fa fa-car"></i></div>
+      <div class="cat-title">Simulation &amp; 3D</div>
+      <div class="cat-tags"><span class="cat-tag">Vehicle physics</span><span class="cat-tag">WheelCollider</span><span class="cat-tag">Animation State Machine</span></div>
+    </div>
+    <div class="proj-grid">
+      <div class="proj-card" data-cat="simulation">
+        <div class="video-thumb"><iframe src="https://www.youtube.com/embed/_OdSwefh_Kg?si=KP_g8Q0bIoA0RKLP" title="Bus Simulator 3D" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="proj-body">
+          <div class="proj-meta"><span class="badge badge-pro">Professional</span><span class="badge badge-plat">Android</span><span class="badge badge-year">Ghost Interactive · 2024</span></div>
+          <div class="proj-title">Bus Simulator 3D</div>
+          <div class="proj-desc">Open-map 3D vehicle simulator — drive bus or car with physics-based controls.</div>
+          <div class="proj-pills"><span class="pill">Vehicle physics</span><span class="pill">WheelCollider</span><span class="pill">Open world</span></div>
+        </div>
+      </div>
+      <div class="proj-card" data-cat="simulation">
+        <div class="video-thumb"><iframe src="https://www.youtube.com/embed/R51B89F0w_Q?si=11TXYx6ckKr2SKjQ" title="Cat Fight 3D" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="proj-body">
+          <div class="proj-meta"><span class="badge badge-pro">Professional</span><span class="badge badge-plat">Mobile · PC</span><span class="badge badge-year">Sparktech · 2025</span></div>
+          <div class="proj-title">Cat Fight 3D</div>
+          <div class="proj-desc">1v1 arena knockout fighting game — animation state machine, hit detection, offline single player.</div>
+          <div class="proj-pills"><span class="pill">Animator Controller</span><span class="pill">State machine</span><span class="pill">Hit detection</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOARD -->
+  <div class="cat-section" data-section="board">
+    <div class="cat-header">
+      <div class="cat-icon green"><i class="fa fa-chess"></i></div>
+      <div class="cat-title">Board, Card &amp; Puzzle</div>
+      <div class="cat-tags"><span class="cat-tag">Rule engine</span><span class="cat-tag">AI opponent</span><span class="cat-tag">Word algorithm</span></div>
+    </div>
+    <div class="proj-grid">
+      <div class="proj-card" data-cat="board">
+        <div class="video-thumb"><iframe src="https://www.youtube.com/embed/z8bnS2Wu8ks?si=WpWLA_XP6M1ETukp" title="Word Connect 2D" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="proj-body">
+          <div class="proj-meta"><span class="badge badge-pro">Professional</span><span class="badge badge-plat">Mobile</span><span class="badge badge-year">Puzzle Game Studio · 2024</span></div>
+          <div class="proj-title">Word Connect 2D</div>
+          <div class="proj-desc">Connect random alphabets to form meaningful words and solve puzzles. Custom word validation engine.</div>
+          <div class="proj-pills"><span class="pill">Word algorithm</span><span class="pill">Dictionary lookup</span><span class="pill">Touch input</span></div>
+        </div>
+      </div>
+      <div class="proj-card" data-cat="board">
+        <div class="video-thumb"><iframe src="https://www.youtube.com/embed/nzxaUCqmkdc?si=8QFgJ4U6CnVTKVbJ" title="Guli Danda" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="proj-body">
+          <div class="proj-meta"><span class="badge badge-pro">Professional</span><span class="badge badge-plat">Android</span><span class="badge badge-year">Pechas · 2020</span></div>
+          <div class="proj-title">Guli Danda</div>
+          <div class="proj-desc">3D recreation of the traditional Bengali sport Guli Danda — culturally localized mobile game.</div>
+          <div class="proj-pills"><span class="pill">Physics</span><span class="pill">Cultural game</span><span class="pill">3D sports</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════
+     PLAY GAMES
+══════════════════════════════════════ -->
+<section class="section" id="games">
+  <h2 class="section-title">Play My Games</h2>
+  <p class="section-sub">All project videos — watch gameplay from every title</p>
+
+  <div class="cat-section" style="margin-bottom:40px">
+    <div class="cat-header">
+      <div class="cat-icon blue"><i class="fa fa-wifi"></i></div>
+      <div class="cat-title">Online Multiplayer</div>
+    </div>
+    <div class="proj-grid">
+      <div class="proj-card">
+        <div class="video-thumb"><iframe src="https://www.youtube.com/embed/r6GU2le1KGg?si=Rq3WYH7ftrsg1L8" title="Euchre Card Game 2D" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="proj-body">
+          <div class="proj-meta"><span class="badge badge-pro">Professional</span><span class="badge badge-plat">Mobile</span><span class="badge badge-year">Sparktech · 2025</span></div>
+          <div class="proj-title">Euchre Card Game 2D</div>
+          <div class="proj-pills"><span class="pill">Photon Fusion</span><span class="pill">Online Multiplayer</span><span class="pill">Firebase Auth</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cat-section" style="margin-bottom:40px">
+    <div class="cat-header">
+      <div class="cat-icon purple"><i class="fa fa-layer-group"></i></div>
+      <div class="cat-title">Architecture &amp; Design Patterns</div>
+    </div>
+    <div class="proj-grid">
+      <div class="proj-card">
+        <div class="video-thumb"><iframe src="https://www.youtube.com/embed/xxv-MhQY0hM?si=4-NjSkijqmWdnYhO" title="Fractaled Path 3D" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="proj-body">
+          <div class="proj-meta"><span class="badge badge-pro">Professional</span><span class="badge badge-plat">PC / Windows</span><span class="badge badge-year">Sparktech · 2025</span></div>
+          <div class="proj-title">Fractaled Path 3D</div>
+          <div class="proj-pills"><span class="pill">State machine</span><span class="pill">MVC</span><span class="pill">Addressables</span></div>
+        </div>
+      </div>
+      <div class="proj-card">
+        <div class="video-thumb"><iframe src="https://www.youtube.com/embed/Sz_eK_fnlIM?si=3M99S17AKQPIdont" title="Ludo Mania" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="proj-body">
+          <div class="proj-meta"><span class="badge badge-pro">Professional</span><span class="badge badge-plat">Android · iOS</span><span class="badge badge-year">Naptech · 2024</span></div>
+          <div class="proj-title">Ludo Mania</div>
+          <div class="proj-pills"><span class="pill">OOP</span><span class="pill">MVC</span><span class="pill">Object Pooling</span></div>
+        </div>
+      </div>
+      <div class="proj-card">
+        <div class="video-thumb"><iframe src="https://www.youtube.com/embed/fINP2P__dYY?si=9QhC1Va94L9IxZnA" title="Brick Breaker" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="proj-body">
+          <div class="proj-meta"><span class="badge badge-pro">Professional</span><span class="badge badge-plat">Android · WebGL</span><span class="badge badge-year">Naptech · 2025</span></div>
+          <div class="proj-title">Brick Breaker 2D</div>
+          <div class="proj-pills"><span class="pill">Object Pooling</span><span class="pill">DoTween</span><span class="pill">ScriptableObject</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cat-section" style="margin-bottom:40px">
+    <div class="cat-header">
+      <div class="cat-icon amber"><i class="fa fa-bolt"></i></div>
+      <div class="cat-title">Hyper Casual &amp; Hybrid Casual</div>
+    </div>
+    <div class="proj-grid">
+      <div class="proj-card">
+        <div class="video-thumb"><iframe src="https://www.youtube.com/embed/IgU38iQ05Go?si=LI6lz38NYvsf7UoZ" title="Lost Survivor" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="proj-body">
+          <div class="proj-meta"><span class="badge badge-pro">Professional</span><span class="badge badge-plat">Android · iOS</span><span class="badge badge-year">TitanForge · 2024</span></div>
+          <div class="proj-title">Lost Survivor — Alien Planet</div>
+          <div class="proj-pills"><span class="pill">Puppet Master</span><span class="pill">Ragdoll</span><span class="pill">Shader Graph</span></div>
+        </div>
+      </div>
+      <div class="proj-card">
+        <div class="video-thumb"><iframe src="https://www.youtube.com/embed/AzBXoZFZL8w" title="Giant Crusher" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="proj-body">
+          <div class="proj-meta"><span class="badge badge-pro">Professional</span><span class="badge badge-plat">Android</span><span class="badge badge-year">Playense · 2021</span></div>
+          <div class="proj-title">Giant Crusher</div>
+          <div class="proj-pills"><span class="pill">Runner mechanic</span><span class="pill">DoTween</span><span class="pill">Unity Ads</span></div>
+        </div>
+      </div>
+      <div class="proj-card">
+        <div class="video-thumb"><iframe src="https://www.youtube.com/embed/m1VgAXWP9f8?si=qkhXbS8cGWUZabO0" title="Three Combined Games" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="proj-body">
+          <div class="proj-meta"><span class="badge badge-pro">Professional</span><span class="badge badge-plat">Android · WebGL</span><span class="badge badge-year">Naptech · 2024</span></div>
+          <div class="proj-title">Three Combined Games</div>
+          <div class="proj-pills"><span class="pill">AdMob</span><span class="pill">Unity Ads</span><span class="pill">Reskin pipeline</span></div>
+        </div>
+      </div>
+      <div class="proj-card">
+        <div class="video-thumb"><iframe src="https://www.youtube.com/embed/8dSHlliUGZc?si=VBE2j2Nvnvn3d_WZ" title="Crazy Dunk" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="proj-body">
+          <div class="proj-meta"><span class="badge badge-pro">Professional</span><span class="badge badge-plat">Android</span><span class="badge badge-year">Playense · 2021</span></div>
+          <div class="proj-title">Crazy Dunk (Basketball)</div>
+          <div class="proj-pills"><span class="pill">AI opponent</span><span class="pill">Physics trajectory</span><span class="pill">DoTween</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cat-section" style="margin-bottom:40px">
+    <div class="cat-header">
+      <div class="cat-icon coral"><i class="fa fa-car"></i></div>
+      <div class="cat-title">Simulation &amp; 3D</div>
+    </div>
+    <div class="proj-grid">
+      <div class="proj-card">
+        <div class="video-thumb"><iframe src="https://www.youtube.com/embed/_OdSwefh_Kg?si=KP_g8Q0bIoA0RKLP" title="Bus Simulator 3D" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="proj-body">
+          <div class="proj-meta"><span class="badge badge-pro">Professional</span><span class="badge badge-plat">Android</span><span class="badge badge-year">Ghost Interactive · 2024</span></div>
+          <div class="proj-title">Bus Simulator 3D</div>
+          <div class="proj-pills"><span class="pill">Vehicle physics</span><span class="pill">WheelCollider</span><span class="pill">Open world</span></div>
+        </div>
+      </div>
+      <div class="proj-card">
+        <div class="video-thumb"><iframe src="https://www.youtube.com/embed/R51B89F0w_Q?si=11TXYx6ckKr2SKjQ" title="Cat Fight 3D" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="proj-body">
+          <div class="proj-meta"><span class="badge badge-pro">Professional</span><span class="badge badge-plat">Mobile · PC</span><span class="badge badge-year">Sparktech · 2025</span></div>
+          <div class="proj-title">Cat Fight 3D</div>
+          <div class="proj-pills"><span class="pill">Animator Controller</span><span class="pill">State machine</span><span class="pill">Hit detection</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cat-section" style="margin-bottom:40px">
+    <div class="cat-header">
+      <div class="cat-icon green"><i class="fa fa-chess"></i></div>
+      <div class="cat-title">Board, Card &amp; Puzzle</div>
+    </div>
+    <div class="proj-grid">
+      <div class="proj-card">
+        <div class="video-thumb"><iframe src="https://www.youtube.com/embed/z8bnS2Wu8ks?si=WpWLA_XP6M1ETukp" title="Word Connect 2D" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="proj-body">
+          <div class="proj-meta"><span class="badge badge-pro">Professional</span><span class="badge badge-plat">Mobile</span><span class="badge badge-year">Puzzle Game Studio · 2024</span></div>
+          <div class="proj-title">Word Connect 2D</div>
+          <div class="proj-pills"><span class="pill">Word algorithm</span><span class="pill">Dictionary lookup</span><span class="pill">Touch input</span></div>
+        </div>
+      </div>
+      <div class="proj-card">
+        <div class="video-thumb"><iframe src="https://www.youtube.com/embed/nzxaUCqmkdc?si=8QFgJ4U6CnVTKVbJ" title="Guli Danda" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="proj-body">
+          <div class="proj-meta"><span class="badge badge-pro">Professional</span><span class="badge badge-plat">Android</span><span class="badge badge-year">Pechas · 2020</span></div>
+          <div class="proj-title">Guli Danda</div>
+          <div class="proj-pills"><span class="pill">Physics</span><span class="pill">Cultural game</span><span class="pill">3D sports</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════
+     CONTACT
+══════════════════════════════════════ -->
+<section class="section" id="contact">
+  <h2 class="section-title">Contact</h2>
+  <p class="section-sub">Let's build something together</p>
+  <div class="contact-grid">
+    <div class="contact-item">
+      <i class="fab fa-linkedin"></i>
+      <div><div class="label">LinkedIn</div><div class="value"><a href="https://www.linkedin.com/in/md-shafi-uddin-shimul-2410a11b8/" target="_blank">md-shafi-uddin-shimul</a></div></div>
+    </div>
+    <div class="contact-item">
+      <i class="fab fa-github"></i>
+      <div><div class="label">GitHub</div><div class="value"><a href="https://github.com/ShimulDev87" target="_blank">ShimulDev87</a></div></div>
+    </div>
+    <div class="contact-item">
+      <i class="fab fa-facebook"></i>
+      <div><div class="label">Facebook</div><div class="value"><a href="https://www.facebook.com/shafiuddinbhuiyan.shimul/" target="_blank">shafiuddinbhuiyan.shimul</a></div></div>
+    </div>
+    <div class="contact-item">
+      <i class="fab fa-stack-overflow"></i>
+      <div><div class="label">Stack Overflow</div><div class="value"><a href="https://stackoverflow.com/users/14993575/shafi-shimul" target="_blank">shafi-shimul</a></div></div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /.wrap -->
+
+<footer>
+  <div class="wrap">
+    <p>© 2026 Shafiuddin Shimul · Unity Game Developer · Dhaka, Bangladesh</p>
+  </div>
+</footer>
+
+<script>
+  /* Tab navigation */
+  document.getElementById('mainNav').addEventListener('click', function(e) {
+    const tab = e.target.closest('.nav-tab');
+    if (!tab) return;
+    e.preventDefault();
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    tab.classList.add('active');
+    const sec = document.getElementById(tab.dataset.target);
+    if (sec) { sec.classList.add('active'); window.scrollTo({top: 0, behavior: 'smooth'}); }
+  });
+
+  /* Portfolio filters */
+  document.getElementById('portFilters').addEventListener('click', function(e) {
+    const btn = e.target.closest('.port-filter');
+    if (!btn) return;
+    document.querySelectorAll('.port-filter').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.filter;
+    document.querySelectorAll('#portfolio .cat-section').forEach(sec => {
+      sec.style.display = (f === 'all' || sec.dataset.section === f) ? '' : 'none';
+    });
+  });
+</script>
+
+</body>
+</html>
