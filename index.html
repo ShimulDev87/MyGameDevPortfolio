@@ -914,13 +914,47 @@
     box-shadow: 0 8px 32px rgba(0,229,160,0.08);
   }
 
-  .game-embed {
+  /* Thumbnail preview */
+  .game-thumb-wrap {
+    position: relative;
     width: 100%;
-    aspect-ratio: 16/9;
-    border: none;
-    display: block;
+    height: 200px;
+    overflow: hidden;
     background: var(--surface);
   }
+  .game-thumb-img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+  .game-card:hover .game-thumb-img { transform: scale(1.04); }
+
+  .game-thumb-fallback {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 10px;
+    color: var(--dim); font-size: 13px;
+  }
+  .game-thumb-fallback i { font-size: 40px; }
+
+  .game-thumb-overlay {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .game-card:hover .game-thumb-overlay { opacity: 1; }
+
+  .play-overlay-btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 24px; border-radius: 999px;
+    background: var(--accent); color: #000;
+    font-size: 14px; font-weight: 700;
+    text-decoration: none;
+    transition: transform 0.15s;
+  }
+  .play-overlay-btn:hover { transform: scale(1.05); color: #000; }
 
   .game-body {
     padding: 18px 20px 20px;
@@ -1033,36 +1067,38 @@
          নতুন game add করতে এই block টা copy করুন
          এবং নিচে paste করুন
     ══════════════════════════════ -->
-   <div class="game-card">
-  <div class="game-thumb-wrap">
-    <img
-      src="Icon.png"
-      alt="Match Color Door 3D thumbnail"
-      class="game-thumb-img"
-    >
-    <div class="game-thumb-overlay">
-      <a href="https://shimuldev87.itch.io/match-color-door-3d" target="_blank" class="play-overlay-btn">
-        <i class="fa fa-play"></i> Play Now
-      </a>
+    <div class="game-card">
+      <!-- Thumbnail: নিজের screenshot দিতে চাইলে src এ image path দিন -->
+      <div class="game-thumb-wrap">
+        <img
+          src="Icon.png"
+          alt="Match Color Door 3D thumbnail"
+          class="game-thumb-img"
+          onerror="this.parentElement.innerHTML='<div class=\'game-thumb-fallback\'><i class=\'fa fa-gamepad\'></i><span>Match Color Door 3D</span></div>'"
+        >
+        <div class="game-thumb-overlay">
+          <a href="https://shimuldev87.itch.io/match-color-door-3d" target="_blank" class="play-overlay-btn">
+            <i class="fa fa-play"></i> Play Now
+          </a>
+        </div>
+      </div>
+      <div class="game-body">
+        <div class="game-top">
+          <div class="game-name">Match Color Door 3D</div>
+          <span class="game-platform"><i class="fa fa-globe"></i> WebGL</span>
+        </div>
+        <div class="game-desc">3D color-matching puzzle game — match the correct color door to pass through and reach the finish. Simple controls, satisfying mechanics.</div>
+        <div class="game-pills">
+          <span class="pill">Unity3D</span>
+          <span class="pill">3D Puzzle</span>
+          <span class="pill">Casual</span>
+          <span class="pill">WebGL</span>
+        </div>
+        <a class="game-play-btn" href="https://shimuldev87.itch.io/match-color-door-3d" target="_blank">
+          <i class="fa fa-play"></i> Play Now on Itch.io
+        </a>
+      </div>
     </div>
-  </div>
-  <div class="game-body">
-    <div class="game-top">
-      <div class="game-name">Match Color Door 3D</div>
-      <span class="game-platform"><i class="fa fa-globe"></i> WebGL</span>
-    </div>
-    <div class="game-desc">3D color-matching puzzle game — match the correct color door to pass through and reach the finish. Simple controls, satisfying mechanics.</div>
-    <div class="game-pills">
-      <span class="pill">Unity3D</span>
-      <span class="pill">3D Puzzle</span>
-      <span class="pill">Casual</span>
-      <span class="pill">WebGL</span>
-    </div>
-    <a class="game-play-btn" href="https://shimuldev87.itch.io/match-color-door-3d" target="_blank">
-      <i class="fa fa-play"></i> Play Now on Itch.io
-    </a>
-  </div>
-</div>
     <!-- ══ END GAME CARD 1 ══ -->
 
 
